@@ -1,9 +1,5 @@
 package main.java.com.company;
 
-import main.java.com.company.DatabaseMethods_Mongo;
-import main.java.com.company.DatabaseMethods_SQL;
-import main.java.com.company.DatabasePadre;
-
 import java.util.Scanner;
 
 public class Main2 {
@@ -19,7 +15,7 @@ public class Main2 {
         int sqlOption=sc.nextInt();
         //doingWhat(sqlOption);//manera personal
         if(sqlOption==1){databaseUsada=new DatabaseMethods_SQL();}
-        if(sqlOption==2){databaseUsada=new DatabaseMethods_Mongo();}
+        if(sqlOption==2){databaseUsada=new DatabaseMethodsMongo();}
 
         boolean salir=false;
         int opcion=0;

@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 public class DatabaseMethods_SQL extends DatabasePadre {
 
@@ -26,7 +27,7 @@ public class DatabaseMethods_SQL extends DatabasePadre {
     }
 
     @Override
-    List<Pelicula> generalConsult(){//devuelve todos los row
+    Stream<Pelicula> generalConsult(){//devuelve todos los row
 
         try(Connection conn = DriverManager.getConnection(System.getProperty("sqlurl"))){
 
