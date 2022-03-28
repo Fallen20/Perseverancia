@@ -3,7 +3,7 @@ package main.java.com.company;
 import java.util.Scanner;
 
 public class Main2 {
-    public static Scanner sc=new Scanner(System.in);
+    public static Scanner sc=new Scanner(System.in).useDelimiter("\\n");
 
     public static void main(String[] args) {
         DatabasePadre databaseUsada=null;
@@ -17,6 +17,7 @@ public class Main2 {
         if(sqlOption==1){databaseUsada=new DatabaseMethods_SQL();}
         if(sqlOption==2){databaseUsada=new DatabaseMethodsMongo();}
 
+        final DatabasePadre database2=databaseUsada;
         boolean salir=false;
         int opcion=0;
 
@@ -25,36 +26,65 @@ public class Main2 {
             System.out.println("1. Consulta general");
             System.out.println("2. Consulta por título");
             System.out.println("3. Insertar");
-            System.out.println("4. Delete");
+            System.out.println("4. Specific delete");
             System.out.println("5. Delete all");
             System.out.println("6. Exit");
+
             opcion=sc.nextInt();
 
             switch (opcion){
                 case 1:
-                    databaseUsada.generalConsult();
+
+                    databaseUsada.generalConsult().forEach(result->{
+                        if(database2 instanceof DatabaseMethods_SQL){System.out.println(result.toStringSQL());}
+                        else if(database2 instanceof DatabaseMethodsMongo){System.out.println(result.toStringMongo());}
+
+                    });
                     break;
+
+
                 case 2:
                     System.out.println("Dime el titulo:");
                     titulo=sc.next();
 
-                    databaseUsada.specificSearch(titulo);
+                    databaseUsada.specificSearch(titulo).forEach(result->{
+                        if(database2 instanceof DatabaseMethods_SQL){System.out.println(result.toStringSQL());}
+                        else if(database2 instanceof DatabaseMethodsMongo){System.out.println(result.toStringMongo());}
+                    });
                     break;
+
+
                 case 3:
+
                     System.out.println("Dime el titulo:");
                     titulo=sc.next();
 
-                    databaseUsada.insert(titulo);
+                    System.out.println("Quieres añadir una sinopsis? Y/N");
+                    String sinopsisOpcion=sc.next();
+                    String sinopsis="";
+
+                    if(sinopsisOpcion.equalsIgnoreCase("Y")){
+                        System.out.println("Dime la sinopsis:");
+                        sinopsis=sc.next();
+                    }
+
+                    databaseUsada.insert(titulo, sinopsis);//sino ponen nada ya se pone como ""
                     break;
+
+
                 case 4:
                     System.out.println("Dime el titulo:");
                     titulo=sc.next();
 
                     databaseUsada.specificDelete(titulo);
                     break;
+
+
                 case 5:
                     databaseUsada.deleteTableData();
                     break;
+
+
                 case 6:
                     salir=true;
                     break;

@@ -15,53 +15,82 @@ public class DatabaseMethodsMongo extends DatabasePadre {
     private final String uri="mongodb://localhost";
     static MongoDatabase database;
 
-    void connect() {
+    @Override
+    void insert(String title, String sinopsis) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             database = mongoClient.getDatabase("sampledb");
-        }
-    }
 
-    @Override
-    void insert(String title) {
-        connect();
-        Document doc = new Document();
-        doc.append("title", title);
-        database.getCollection("movies").insertOne(doc);
+
+
+            Document doc = new Document();
+            doc.append("title", title);
+
+            if(!sinopsis.equalsIgnoreCase("")){//si no es nulo
+                doc.append("synopsis", sinopsis);
+            }
+            database.getCollection("movies").insertOne(doc);
+
+        }
+
     }
 
     @Override
     Stream<Pelicula> generalConsult() {
-        connect();
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            database = mongoClient.getDatabase("sampledb");
 
-        final List<Pelicula> peliculaList = new ArrayList<>();
+            final List<Pelicula> peliculaList = new ArrayList<>();
 
-        database.getCollection("movies").find().forEach(d -> {
-            Pelicula pelicula = new Pelicula(d.getInteger("_id"), d.getString("title"), d.getString("synopsis"));
-            peliculaList.add(pelicula);
+            database.getCollection("movies").find().forEach(d -> {
+                Pelicula pelicula = new Pelicula(d.getObjectId("_id"),d.getString("title"), d.getString("synopsis"));
+                //el id ha de ser objectID pero en sql lo usas como string
+                peliculaList.add(pelicula);
 
-        });
+            });
 
-        return peliculaList.stream();
+            return peliculaList.stream();
+        }
+
+
     }
 
     @Override
-    void specificSearch(String title) {
-        connect();
-       database.getCollection("movies").find(eq("title", title)).forEach(d -> {
-            System.out.println(d.toJson());
-        });
+    Stream<Pelicula> specificSearch(String title) {
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            database = mongoClient.getDatabase("sampledb");
+
+            final List<Pelicula> peliculaList = new ArrayList<>();
+
+            database.getCollection("movies").find(eq("title", title)).forEach(d -> {
+                Pelicula pelicula = new Pelicula(d.getObjectId("_id"),d.getString("title"), d.getString("synopsis"));
+                peliculaList.add(pelicula);
+
+            });
+
+            return peliculaList.stream();
+
+        }
+
     }
 
     @Override
     void specificDelete(String title) {
-        connect();
-        database.getCollection("movies").deleteMany(Filters.eq("title", title));
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            database = mongoClient.getDatabase("sampledb");
+
+            database.getCollection("movies").deleteMany(Filters.eq("title", title));
+
+        }
     }
 
     @Override
     void deleteTableData() {
-        connect();
-        database.getCollection("movies").deleteMany(new Document());
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            database = mongoClient.getDatabase("sampledb");
+
+            database.getCollection("movies").deleteMany(new Document());
+        }
+
     }
 
 }
