@@ -16,7 +16,7 @@ public class DatabaseMethodsMongo extends DatabasePadre {
     static MongoDatabase database;
 
     @Override
-    void insert(String title, String sinopsis) {
+    void insertPelicula(String title, String sinopsis) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             database = mongoClient.getDatabase("sampledb");
 
@@ -35,7 +35,7 @@ public class DatabaseMethodsMongo extends DatabasePadre {
     }
 
     @Override
-    Stream<Pelicula> generalConsult() {
+    Stream<Pelicula> generalConsultPelicula() {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             database = mongoClient.getDatabase("sampledb");
 
@@ -55,7 +55,7 @@ public class DatabaseMethodsMongo extends DatabasePadre {
     }
 
     @Override
-    Stream<Pelicula> specificSearch(String title) {
+    Stream<Pelicula> specificSearchPelicula(String title) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             database = mongoClient.getDatabase("sampledb");
 
@@ -74,7 +74,7 @@ public class DatabaseMethodsMongo extends DatabasePadre {
     }
 
     @Override
-    void specificDelete(String title) {
+    void specificDeletePelicula(String title) {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             database = mongoClient.getDatabase("sampledb");
 
@@ -84,12 +84,40 @@ public class DatabaseMethodsMongo extends DatabasePadre {
     }
 
     @Override
-    void deleteTableData() {
+    void deleteTableDataPelicula() {
         try (MongoClient mongoClient = MongoClients.create(uri)) {
             database = mongoClient.getDatabase("sampledb");
 
             database.getCollection("movies").deleteMany(new Document());
         }
+
+    }
+
+    //-------------------------------------------
+    //ACTOR
+
+    @Override
+    void insertActor(String name, int age) {
+
+    }
+
+    @Override
+    Stream<Actor> generalConsultActor() {
+        return null;
+    }
+
+    @Override
+    Stream<Actor> specificSearchActor(String name) {
+        return null;
+    }
+
+    @Override
+    void specificDeleteActor(String name) {
+
+    }
+
+    @Override
+    void deleteTableDataActor() {
 
     }
 
