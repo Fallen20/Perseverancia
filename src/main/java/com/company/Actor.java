@@ -64,7 +64,7 @@ public class Actor {
 
     public String toStringMongo() {
         return "Actor{" +
-                ", id=" + idMongo +
+                "id=" + idMongo +
                 ", name_actor='" + name_actor + '\'' +
                 ", age=" + age +
                 '}';

@@ -98,26 +98,73 @@ public class DatabaseMethodsMongo extends DatabasePadre {
 
     @Override
     void insertActor(String name, int age) {
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            database = mongoClient.getDatabase("sampledb");
 
+            Document doc = new Document();
+            doc.append("name_actor", name);
+            doc.append("age", age);
+
+            database.getCollection("actors").insertOne(doc);
+
+        }
     }
 
     @Override
     Stream<Actor> generalConsultActor() {
-        return null;
+
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            database = mongoClient.getDatabase("sampledb");
+
+            final List<Actor> actorList = new ArrayList<>();
+
+            database.getCollection("actors").find().forEach(d -> {
+                Actor actor = new Actor(d.getObjectId("actor_id"),d.getString("name_actor"), d.getInteger("age"));
+                //el id ha de ser objectID pero en sql lo usas como string
+                actorList.add(actor);
+
+            });
+
+            return actorList.stream();
+        }
     }
 
     @Override
     Stream<Actor> specificSearchActor(String name) {
-        return null;
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            database = mongoClient.getDatabase("sampledb");
+
+            final List<Actor> actorList = new ArrayList<>();
+
+            database.getCollection("actors").find(eq("name_actor", name)).forEach(d -> {
+                Actor actor = new Actor(d.getObjectId("actor_id"),d.getString("name_actor"), d.getInteger("age"));
+                actorList.add(actor);
+
+            });
+
+            return actorList.stream();
+
+        }
     }
 
     @Override
     void specificDeleteActor(String name) {
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            database = mongoClient.getDatabase("sampledb");
+
+            database.getCollection("actors").deleteMany(Filters.eq("name_actor", name));
+
+        }
 
     }
 
     @Override
     void deleteTableDataActor() {
+        try (MongoClient mongoClient = MongoClients.create(uri)) {
+            database = mongoClient.getDatabase("sampledb");
+
+            database.getCollection("actors").deleteMany(new Document());
+        }
 
     }
 
