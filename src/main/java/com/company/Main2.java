@@ -131,7 +131,7 @@ public class Main2 {
         System.out.println("-----ACTOR------");
         System.out.println("Que quieres hacer?");
         System.out.println("1. Consulta general");
-        System.out.println("2. Consulta por título");
+        System.out.println("2. Consulta por nombre");
         System.out.println("3. Insertar");
         System.out.println("4. Specific delete");
         System.out.println("5. Delete all");
@@ -142,7 +142,7 @@ public class Main2 {
         switch (opcion) {
             case 1:
 
-                databaseUsada.generalConsultPelicula().forEach(result -> {
+                databaseUsada.generalConsultActor().forEach(result -> {
                     if (database2 instanceof DatabaseMethods_SQL) {
                         System.out.println(result.toStringSQL());
                     } else if (database2 instanceof DatabaseMethodsMongo) {

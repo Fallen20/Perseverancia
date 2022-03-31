@@ -96,17 +96,18 @@ public class DatabaseMethods_SQL extends DatabasePadre {
     //-------------------------------------------
     //ACTOR
     @Override
-    void insertActor(String name, int age) {
+    void insertActor(String name, int age) {//ok
 
         try(Connection conn = DriverManager.getConnection(uri)){
 
             //INSERT
-            PreparedStatement statement= conn.prepareStatement("INSERT INTO actors VALUES(?,?)");;
+            PreparedStatement statement= conn.prepareStatement("INSERT INTO actors (name_actor, age) VALUES(?,?)");
 
             statement.setString(1, name);
             statement.setInt(2, age);//para int seria setInt
 
-            statement.executeUpdate();//hace el statement
+
+            statement.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -122,8 +123,8 @@ public class DatabaseMethods_SQL extends DatabasePadre {
             //consulta
             ResultSet resultSet = conn.createStatement().executeQuery("SELECT * FROM actors");
             while (resultSet.next()) {
-                Actor pelicula=new Actor(resultSet.getString("actor_id"),resultSet.getString("name_actor"),resultSet.getInt("age"));
-                actorList.add(pelicula);
+                Actor actor=new Actor(resultSet.getString("actor_id"),resultSet.getString("name_actor"),resultSet.getInt("age"));
+                actorList.add(actor);
             }
 
             return  actorList.stream();
